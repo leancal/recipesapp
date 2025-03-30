@@ -1,11 +1,11 @@
 
-# 📱 App de Recetas en React Native
+# 📱 Recipe App – React Native
 
-Aplicación móvil de recetas de cocina desarrollada con **React Native + Expo**, usando **Redux Toolkit** para manejo global del estado y **AsyncStorage** para persistencia local.
+A mobile app for cooking recipes developed using **React Native + Expo**, with **Redux Toolkit** for global state management and **AsyncStorage** for local persistence.
 
 ---
 
-## 🚀 Tecnologías usadas
+## 🚀 Technologies Used
 
 - React Native (Expo)
 - React Navigation
@@ -15,9 +15,9 @@ Aplicación móvil de recetas de cocina desarrollada con **React Native + Expo**
 
 ---
 
-## 🧰 Requisitos previos
+## 🧰 Prerequisites
 
-Asegúrate de tener instalado:
+Make sure you have the following installed:
 
 - [Node.js LTS](https://nodejs.org/)
 - [Git](https://git-scm.com/downloads)
@@ -27,36 +27,36 @@ Asegúrate de tener instalado:
 npm install -g expo-cli
 ```
 
-- App **Expo Go** en tu celular:
+- **Expo Go** mobile app:
   - [Android](https://play.google.com/store/apps/details?id=host.exp.exponent)
   - [iOS](https://apps.apple.com/app/expo-go/id982107779)
 
 ---
 
-## 📦 Instalación del proyecto
+## 📦 Project Setup
 
 ```bash
-# Clonar el repositorio
-git clone <URL_DEL_REPO>
-cd <recipesapp>
+# Clone the repository
+git clone <REPOSITORY_URL>
+cd <project-name>
 
-# Instalar dependencias
+# Install dependencies
 npm install
 ```
 
 ---
 
-## 📚 Dependencias clave
+## 📚 Key Dependencies
 
-En caso de necesitar instalar manualmente:
+In case you need to install them manually:
 
 ```bash
-# React Navigation y dependencias
+# React Navigation and dependencies
 npm install @react-navigation/native
 npx expo install react-native-screens react-native-safe-area-context react-native-gesture-handler react-native-reanimated react-native-vector-icons
 npm install @react-navigation/native-stack
 
-# Redux Toolkit y React Redux
+# Redux Toolkit and React Redux
 npm install @reduxjs/toolkit react-redux
 
 # AsyncStorage
@@ -65,42 +65,41 @@ npx expo install @react-native-async-storage/async-storage
 
 ---
 
-## 🧪 Ejecutar la app
+## 🧪 Run the App
 
 ```bash
 npm start
 ```
 
-Esto abrirá **Expo Dev Tools** en el navegador.
+This will launch the **Expo Dev Tools** in your browser.
 
-Desde ahí podés:
-- Escanear el código QR con la app Expo Go (en tu celular)
-- Usar emulador (Android/iOS) si lo tenés configurado
-
----
-
-## 🧠 Funcionalidades actuales
-
-- Login/Registro simulado
-- Lista de recetas con categorías
-- Vista detallada con ingredientes y pasos
-- Agregar/Quitar favoritos
-- Crear, editar y eliminar recetas
-- Persistencia local con AsyncStorage
+From there, you can:
+- Scan the QR code with the Expo Go app (on your phone)
+- Launch an emulator (Android/iOS) if configured
 
 ---
 
-## 🔜 Próximamente
+## 🧠 Current Features
 
-- Conexión con backend en .NET
-- Buscador de recetas
-- Subida de imágenes reales
-- Comentarios y calificaciones
+- Simulated login and registration
+- Recipe list with category filtering
+- Recipe detail view with ingredients and steps
+- Add/remove favorites
+- Create, edit, and delete recipes
+- Local data persistence with AsyncStorage
 
 ---
 
-## 🧑 Autor
+## 🔜 Coming Soon
 
-Este proyecto fue desarrollado como práctica full-stack mobile con backend .NET en proceso.
+- Integration with .NET backend
+- Recipe search
+- Real image uploads
+- Comments and ratings
+
+---
+
+## 👨‍💻 Author
+
+This project was created as a full-stack mobile development practice. Backend in .NET is currently in progress.
 ```
-
