@@ -1,81 +1,46 @@
-import React, { useEffect } from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  loadRecipesAndCategories,
-  setActiveCategory,
-} from "../store/recipesSlice";
-import { Button } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, FlatList, StyleSheet, Button, TouchableOpacity } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { setRecipes } from '../store/recipesSlice';
+import { useNavigation } from '@react-navigation/native';
 
-
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen() {
   const dispatch = useDispatch();
-  const { list, categories, activeCategoryId } = useSelector(
-    (state) => state.recipes
-  );
+  const navigation = useNavigation(); 
+  const recipes = useSelector((state) => state.recipes.list);
 
   useEffect(() => {
-    dispatch(loadRecipesAndCategories());
+    const fetchRecipes = async () => {
+      try {
+        const res = await fetch('http://192.168.0.118:5089/api/recipes'); // 👈 tu IP + puerto
+        const data = await res.json();
+        dispatch(setRecipes(data));
+      } catch (e) {
+        console.error('Error al obtener recetas del backend:', e);
+      }
+    };
+
+    fetchRecipes();
   }, []);
-
-  const filteredRecipes = activeCategoryId
-    ? list.filter((recipe) => recipe.categoryId === activeCategoryId)
-    : list;
-
-  const handleCategoryPress = (id) => {
-    dispatch(setActiveCategory(id === activeCategoryId ? null : id)); // toggle
-  };
-
-  const isLoggedIn = useSelector((state) => state.user?.isLoggedIn || false);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Categorías:</Text>
+      <Text style={styles.title}>Recetas del backend:</Text>
+
+      {/* ✅ Botón para ir a la pantalla de creación */}
+      <View style={{ marginBottom: 20 }}>
+        <Button
+          title="Crear nueva receta"
+          onPress={() => navigation.navigate('CreateRecipe')}
+        />
+      </View>
+
       <FlatList
-        data={categories}
-        horizontal
+        data={recipes}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => handleCategoryPress(item.id)}>
-            <Text
-              style={[
-                styles.category,
-                item.id === activeCategoryId && styles.categoryActive,
-              ]}
-            >
-              {item.name}
-            </Text>
-          </TouchableOpacity>
-        )}
-        style={{ marginBottom: 20 }}
-      />
-
-      {isLoggedIn && (
-        <View style={{ marginBottom: 20 }}>
-          <Button
-            title="Crear nueva receta"
-            onPress={() => navigation.navigate("CreateRecipe")}
-          />
-        </View>
-      )}
-
-      <Text style={styles.title}>Recetas:</Text>
-      <FlatList
-        data={filteredRecipes}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate("RecipeDetail", { recipeId: item.id })
-            }
-          >
-            <Text style={styles.recipe}>{item.title}</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('RecipeDetail', { recipeId: item.id })}>
+            <Text style={styles.item}>🍽 {item.title}</Text>
           </TouchableOpacity>
         )}
       />
@@ -85,16 +50,6 @@ export default function HomeScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: { padding: 20 },
-  title: { fontSize: 20, fontWeight: "bold", marginBottom: 10 },
-  recipe: { fontSize: 16, paddingVertical: 8 },
-  category: {
-    backgroundColor: "#ddd",
-    padding: 8,
-    marginRight: 10,
-    borderRadius: 5,
-  },
-  categoryActive: {
-    backgroundColor: "#aaa",
-    color: "white",
-  },
+  title: { fontSize: 22, fontWeight: 'bold', marginBottom: 10 },
+  item: { fontSize: 16, marginVertical: 5 },
 });

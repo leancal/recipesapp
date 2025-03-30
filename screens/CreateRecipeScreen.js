@@ -8,7 +8,6 @@ import { addRecipe } from '../store/recipesSlice';
 export default function CreateRecipeScreen({ navigation }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
-  const categories = useSelector((state) => state.recipes.categories);
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -17,26 +16,38 @@ export default function CreateRecipeScreen({ navigation }) {
   const [stepsText, setStepsText] = useState('');
   const [image, setImage] = useState('');
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!title || !description || !categoryId) {
-      Alert.alert('Faltan datos', 'Por favor completa todos los campos obligatorios.');
+      Alert.alert('Faltan datos', 'Completá título, descripción y categoría');
       return;
     }
 
     const newRecipe = {
-      id: Date.now().toString(),
       title,
       description,
-      image: image || 'https://via.placeholder.com/300x200.png?text=Sin+Imagen',
+      image: image || 'https://via.placeholder.com/300x200.png?text=Receta',
       categoryId: parseInt(categoryId),
       ingredients: ingredientsText.split('\n').filter(Boolean),
       steps: stepsText.split('\n').filter(Boolean),
-      createdBy: user?.id || null,
+      createdBy: user?.id || 0,
     };
 
-    dispatch(addRecipe(newRecipe));
-    Alert.alert('Receta creada', 'Tu receta fue agregada con éxito');
-    navigation.navigate('Home');
+    try {
+      const res = await fetch('http://192.168.0.118:5089/api/recipes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newRecipe),
+      });
+
+      const data = await res.json();
+
+      dispatch(addRecipe(data));
+      Alert.alert('Receta creada', 'Tu receta fue enviada al servidor');
+      navigation.navigate('Home');
+    } catch (error) {
+      console.error('Error al crear receta:', error);
+      Alert.alert('Error', 'No se pudo enviar la receta al servidor.');
+    }
   };
 
   return (
@@ -66,7 +77,7 @@ const styles = StyleSheet.create({
     borderWidth: 1, borderColor: '#ccc', padding: 10, marginBottom: 15, borderRadius: 5,
   },
   textArea: {
-    borderWidth: 1, borderColor: '#ccc', padding: 10, marginBottom: 15, borderRadius: 5, height: 100,
+    borderWidth: 1, borderColor: '#ccc', padding: 10, height: 100, marginBottom: 15, borderRadius: 5,
   },
   label: { fontWeight: 'bold', marginBottom: 5 },
 });

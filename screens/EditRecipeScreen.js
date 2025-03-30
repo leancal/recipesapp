@@ -31,12 +31,12 @@ export default function EditRecipeScreen({ route, navigation }) {
     }
   }, [recipe]);
 
-  const handleUpdate = () => {
+  const handleUpdate = async () => {
     if (!title || !description || !categoryId) {
       Alert.alert('Error', 'Todos los campos obligatorios deben completarse.');
       return;
     }
-
+  
     const updatedRecipe = {
       ...recipe,
       title,
@@ -46,11 +46,25 @@ export default function EditRecipeScreen({ route, navigation }) {
       ingredients: ingredientsText.split('\n').filter(Boolean),
       steps: stepsText.split('\n').filter(Boolean),
     };
-
-    dispatch(updateRecipe(updatedRecipe));
-    Alert.alert('Receta actualizada', 'Tu receta fue modificada con éxito.');
-    navigation.navigate('Home');
+  
+    try {
+      const res = await fetch(`http://192.168.0.118:5089/api/recipes/${recipe.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedRecipe),
+      });
+  
+      const data = await res.json();
+  
+      dispatch(updateRecipe(data));
+      Alert.alert('Receta actualizada', 'Los cambios fueron guardados.');
+      navigation.navigate('Home');
+    } catch (error) {
+      console.error('Error al actualizar receta:', error);
+      Alert.alert('Error', 'No se pudo actualizar la receta.');
+    }
   };
+  
 
   if (!recipe) {
     return (

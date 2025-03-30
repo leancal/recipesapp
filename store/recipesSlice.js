@@ -38,7 +38,7 @@ const recipesSlice = createSlice({
     toggleFavorite: (state, action) => {
       const recipeId = action.payload;
       const exists = state.favorites.includes(recipeId);
-
+  
       if (exists) {
         state.favorites = state.favorites.filter((id) => id !== recipeId);
       } else {
@@ -55,7 +55,13 @@ const recipesSlice = createSlice({
         state.list[index] = updated;
       }
     },
+  
+    // ✅ Agregá esta función para que la app pueda cargar recetas del backend
+    setRecipes: (state, action) => {
+      state.list = action.payload;
+    },
   },
+  
   extraReducers: (builder) => {
     builder.addCase(loadRecipesAndCategories.fulfilled, (state, action) => {
       state.list = action.payload.recipes;
@@ -77,7 +83,13 @@ export const loadFromStorage = createAsyncThunk(
   }
 );
 
-export const { setActiveCategory, toggleFavorite, addRecipe, updateRecipe } =
-  recipesSlice.actions;
+export const {
+  setActiveCategory,
+  toggleFavorite,
+  addRecipe,
+  updateRecipe,
+  setRecipes, 
+} = recipesSlice.actions;
+
 
 export default recipesSlice.reducer;
